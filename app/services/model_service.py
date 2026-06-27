@@ -6,12 +6,12 @@ from app.cache.redis_cache import get_cached_prediction, set_cached_prediction
 model = joblib.load(settings.MODEL_PATH)
 
 def predict_car_price(features: dict) -> float:
-    cache_key = " ".join([str(val) for val in data.values()])
+    cache_key = " ".join([str(val) for val in features.values()])
     cached = get_cached_prediction(cache_key)
     if cached:
         return cached
     
-    input_data = pd.DataFrame([data])
+    input_data = pd.DataFrame([features])
     prediction = model.predict(input_data)[0]
     set_cached_prediction(cache_key, prediction)
     return prediction
